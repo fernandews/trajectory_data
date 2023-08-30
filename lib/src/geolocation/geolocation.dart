@@ -6,6 +6,7 @@ import 'package:trajectory_data/src/internal_persistence/internal_persistence.da
 import 'package:trajectory_data/src/send_data/send_data.dart';
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter/foundation.dart';
 
 class Geolocation {
   final int id;
@@ -37,7 +38,18 @@ class Geolocation {
   }
 }
 
-void startGettingLocation(int user) {
+void startServices(int user) {
+
+  print("Antes de tudo");
+  startGettingLocation(user);
+  //compute<int, void>(startGettingLocation, user);
+  print("chamei a função de geolocalização");
+  startApiService();
+  //compute<void, void>(startApiService, null);
+  print("chamei a função de enviar para API");
+}
+
+void startApiService() {
   Workmanager().initialize(callbackDispatcher);
   Workmanager().registerPeriodicTask(
     "send_to_api_task",
@@ -45,8 +57,15 @@ void startGettingLocation(int user) {
     inputData: <String, dynamic>{},
     frequency: Duration(minutes: 15),
   );
-  const waitingTime = Duration(seconds: 40);
-  Timer.periodic(waitingTime, (timer) {getGeolocation(user);});
+}
+
+void startGettingLocation(int user) {
+  const waitingTime = Duration(seconds: 10);
+  print("startGettingLocation callback executed");
+  print(waitingTime);
+  Timer.periodic(waitingTime, (timer) {
+    print("Timer callback executed");
+    getGeolocation(user);});
 }
 
   // request de current position, insert in a list e check the time to send the list

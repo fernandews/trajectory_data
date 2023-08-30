@@ -18,6 +18,9 @@ dependencies:
   path: ^1.8.3
   flutter_background_service: ^3.0.1
   workmanager: ^0.5.1
+  foundation: ^0.0.5
+  geofence_service: ^4.0.0
+
 
 dev_dependencies:
   flutter_test:

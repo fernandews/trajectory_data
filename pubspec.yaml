@@ -6,15 +6,21 @@ homepage:
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=2.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  geolocator: ^8.0.0
-  geofence_service: ^4.0.0
+  geolocator: ^9.0.2
   async: ^2.8.2
   flutter_foreground_task: ^4.1.0
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  flutter_background_service: ^3.0.1
+  workmanager: ^0.5.1
+  foundation: ^0.0.5
+  geofence_service: ^4.0.0
+
 
 dev_dependencies:
   flutter_test:

@@ -20,7 +20,7 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
 
-precisa das perimssoes no AndroidManifest.xml
+precisa das permissões no AndroidManifest.xml
 ```dart
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

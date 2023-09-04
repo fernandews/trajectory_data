@@ -8,14 +8,16 @@ import 'package:geofence_service/geofence_service.dart';
 import 'dart:isolate';
 import 'dart:io';
 import 'dart:developer' as dev;
+import 'package:trajectory_data/trajectory_data.dart';
+import 'package:geofence_service/geofence_service.dart';
 
 class Geofencing {
   // Create a [GeofenceService] instance and set options.
   final _geofenceService = GeofenceService.instance.setup(
-      interval: 5000,
+      interval: 600000,
       accuracy: 100,
       loiteringDelayMs: 60000,
-      statusChangeDelayMs: 10000,
+      statusChangeDelayMs: 120000,
       useActivityRecognition: false,
       allowMockLocations: false,
       printDevLog: false,
@@ -25,13 +27,10 @@ class Geofencing {
   final _geofenceList = <Geofence>[
     Geofence(
       id: 'place_1',
-      latitude: 35.103422,
-      longitude: 129.036023,
+      latitude: -23.700775,
+      longitude: -46.696773,
       radius: [
-        GeofenceRadius(id: 'radius_100m', length: 100),
-        GeofenceRadius(id: 'radius_25m', length: 25),
-        GeofenceRadius(id: 'radius_250m', length: 250),
-        GeofenceRadius(id: 'radius_200m', length: 200),
+        GeofenceRadius(id: 'radius_300m', length: 300),
       ],
     ),
   ];
@@ -45,6 +44,63 @@ class Geofencing {
       _geofenceService.addStreamErrorListener(_onError);
       _geofenceService.start(_geofenceList).catchError(_onError);
     });
+  }
+}
+
+void startCallback() {
+  // The setTaskHandler function must be called to handle the task in the background.
+  FlutterForegroundTask.setTaskHandler(FirstTaskHandler());
+}
+
+class FirstTaskHandler extends TaskHandler {
+  SendPort? _sendPort;
+
+  // Called when the task is started.
+  @override
+  Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
+    _sendPort = sendPort;
+
+    // You can use the getData function to get the stored data.
+    final customData =
+    await FlutterForegroundTask.getData<String>(key: 'customData');
+    dev.log('customData: $customData');
+  }
+
+  // Called every [interval] milliseconds in [ForegroundTaskOptions].
+  @override
+  Future<void> onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
+    // Send data to the main isolate.
+    sendPort?.send(timestamp);
+  }
+
+
+  @override
+  Future<void> onDestroy(DateTime timestamp, SendPort? sendPort) async {
+
+  }
+
+  @override
+  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
+
+  }
+
+  // Called when the notification button on the Android platform is pressed.
+  @override
+  void onNotificationButtonPressed(String id) {
+    dev.log('onNotificationButtonPressed >> $id');
+  }
+
+  // Called when the notification itself on the Android platform is pressed.
+  //
+  // "android.permission.SYSTEM_ALERT_WINDOW" permission must be granted for
+  // this function to be called.
+  @override
+  void onNotificationPressed() {
+    // Note that the app will only route to "/resume-route" when it is exited so
+    // it will usually be necessary to send a message through the send port to
+    // signal it to restore state when the app is already started.
+    FlutterForegroundTask.launchApp("/resume-route");
+    _sendPort?.send('onNotificationPressed');
   }
 }
 

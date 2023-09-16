@@ -50,8 +50,8 @@ class FirstTaskHandler extends TaskHandler {
 
   // Called when the task is started.
   @override
-  Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
-    _sendPort = sendPort;
+  Future<void> onStart(int user) async {
+    startGettingLocation(user);
 
     // You can use the getData function to get the stored data.
     final customData =

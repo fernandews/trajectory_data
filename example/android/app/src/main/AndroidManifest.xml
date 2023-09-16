@@ -38,7 +38,11 @@
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
             android:foregroundServiceType="location"
-            android:stopWithTask="true" />r
+            android:stopWithTask="true" />
+        <service android:name="rekab.app.background_locator.IsolateHolderService"
+            android:permission="android.permission.FOREGROUND_SERVICE"
+            android:exported="true"
+            android:foregroundServiceType = "location"/>
     </application>
 
 </manifest>

@@ -8,39 +8,48 @@ import 'package:workmanager/workmanager.dart';
 import 'package:connectivity/connectivity.dart';
 
 
-//estabelece a conexão com o banco de dados
-Future<Database> _openDatabase() async {
-  final databasePath = await getDatabasesPath();
-  final path = join(databasePath, 'geolocation.db');
-  return openDatabase(
-    path,
-    version: 1,
-    onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE geolocations(id INTEGER PRIMARY KEY AUTOINCREMENT, user INTEGER, datetime TEXT, trajectory TEXT)',
-      );
-    },
-  );
-}
 
-//faz um select no banco de dados
-Future<Map<String, dynamic>?> getGeolocationData(Database db) async {
-  final List<Map<String, dynamic>> maps = await db.query('geolocations', limit: 1);
+class SendInBackground {
 
-  if (maps.isNotEmpty) {
-    return{
-      'id': maps[0]['id'],
-      'user':  maps[0]['user'],
-      'datetime': maps[0]['datetime'].toString(),
-      'trajectory':  List<List<double>>.from(jsonDecode(maps[0]['trajectory']).map((data) => List<double>.from(data))),
-    };
-  } else {
-    return null;
+  TrajectoryDefinitions._();
+  static final TrajectoryDefinitions _instance = TrajectoryDefinitions._();
+  //establishes connection to the database
+  Future<Database> _openDatabase() async {
+    final databasePath = await getDatabasesPath();
+    final path = join(databasePath, 'geolocation.db');
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE geolocations(id INTEGER PRIMARY KEY AUTOINCREMENT, user INTEGER, datetime TEXT, trajectory TEXT)',
+        );
+      },
+    );
   }
-}
+
+  //do a select in the database
+""
+  Future<Map<String, dynamic>?> getGeolocationData(Database db) async {
+    final List<Map<String, dynamic>> maps = await db.query(
+        'geolocations', limit: 1);
+
+    if (maps.isNotEmpty) {
+      return {
+        'id': maps[0]['id'],
+        'user': maps[0]['user'],
+        'datetime': maps[0]['datetime'].toString(),
+        'trajectory': List<List<double>>.from(
+            jsonDecode(maps[0]['trajectory']).map((data) => List<double>.from(
+                data))),
+      };
+    } else {
+      return null;
+    }
+  }
 
 //delete data from database
-Future<void> deleteGeolocation(Map<String, dynamic>? data) async {
+  Future<void> deleteGeolocation(Map<String, dynamic>? data) async {
     print('Data sent to API successfully!');
     if (data != null) {
       final id = data['id'];
@@ -52,49 +61,58 @@ Future<void> deleteGeolocation(Map<String, dynamic>? data) async {
       );
       print('delete successfully!');
     }
-
-}
+  }
 
 //main function
-Future<int?> sendToApi(Map<String, dynamic>? data) async {
-  if (data != null) {
-    final jsonData = json.encode(data);
-    final apiUrl = 'https://hye0htyjkl.execute-api.sa-east-1.amazonaws.com/versao-1/geolocation';
+  Future<int?> sendToApi(Map<String, dynamic>? data) async {
+    if (data != null) {
+      final jsonData = json.encode(data);
+      final apiUrl = 'https://hye0htyjkl.execute-api.sa-east-1.amazonaws.com/versao-1/geolocation';
 
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      return null;
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
+        return null;
+      }
+      try {
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonData,
+        );
+        return response.statusCode;
+      } catch (e) {
+        print('Error sending data to API: $e');
+      }
     }
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonData,
-      );
-      return response.statusCode;
-    } catch (e) {
-      print('Error sending data to API: $e');
-    }
-    }
+  }
+
+  void callbackDispatcher() {
+    Workmanager().executeTask((task, inputData) async {
+      print('opa, comecei!!');
+      final Database db = await _openDatabase();
+      print('abri conexão com o banco');
+      final Map<String, dynamic>? data = await getGeolocationData(db);
+      print('peguei o dado no banco');
+      final int? statusCode = await sendToApi(data);
+      print('chamei a API');
+      if (statusCode == 200) {
+        await deleteGeolocation(data);
+      }
+      return Future.value(true);
+    });
+  }
+
+  void startApiService() {
+    Workmanager().initialize(callbackDispatcher);
+    Workmanager().registerPeriodicTask(
+      "send_to_api_task",
+      "simplePeriodicTask",
+      inputData: <String, dynamic>{},
+      frequency: Duration(minutes: 15),
+    );
+  }
+
 }
-
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    print('opa, comecei!!');
-    final Database db = await _openDatabase();
-    print('abri conexão com o banco');
-    final Map<String, dynamic>? data = await getGeolocationData(db);
-    print('peguei o dado no banco');
-    final int? statusCode = await sendToApi(data);
-    print('chamei a API');
-    if (statusCode == 200) {
-      await deleteGeolocation(data);
-    }
-    return Future.value(true);
-  });
-}
-
-
 
 
 

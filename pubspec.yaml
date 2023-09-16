@@ -13,13 +13,15 @@ dependencies:
     sdk: flutter
   geolocator: ^9.0.2
   async: ^2.8.2
-  flutter_foreground_task: ^4.1.0
   sqflite: ^2.3.0
   path: ^1.8.3
-  flutter_background_service: ^3.0.1
   workmanager: ^0.5.1
   foundation: ^0.0.5
-  geofence_service: ^4.0.0
+  flutter_isolate: ^2.0.4
+  compute: ^1.0.2
+  flutter_foreground_task: ^6.1.2
+  http: ^1.1.0
+  connectivity: ^3.0.6
 
 
 dev_dependencies:

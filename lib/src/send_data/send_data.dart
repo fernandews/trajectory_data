@@ -11,8 +11,9 @@ import 'package:connectivity/connectivity.dart';
 
 class SendInBackground {
 
-  TrajectoryDefinitions._();
-  static final TrajectoryDefinitions _instance = TrajectoryDefinitions._();
+  SendInBackground._();
+  static final SendInBackground _instance = SendInBackground._();
+
   //establishes connection to the database
   Future<Database> _openDatabase() async {
     final databasePath = await getDatabasesPath();
@@ -28,8 +29,6 @@ class SendInBackground {
     );
   }
 
-  //do a select in the database
-""
   Future<Map<String, dynamic>?> getGeolocationData(Database db) async {
     final List<Map<String, dynamic>> maps = await db.query(
         'geolocations', limit: 1);

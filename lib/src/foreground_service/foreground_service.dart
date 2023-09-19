@@ -120,10 +120,11 @@ class TrajectoryDefinitions {
 void startServices(int user) async {
   print("Starting Geolocation Foreground Service");
   TrajectoryDefinitions trajectory = TrajectoryDefinitions._instance;
+  SendInBackground send = SendInBackground._instance;
   await trajectory._requestPermissionForAndroid();
   trajectory._initForegroundTask();
   trajectory._startForegroundTask(user);
-  startApiService();
+  send.startApiService();
   print("Geolocation Foreground Service started");
 }
 

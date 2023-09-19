@@ -14,7 +14,8 @@ class SendInBackground {
   SendInBackground._();
   static final SendInBackground _instance = SendInBackground._();
 
-  //establishes connection to the database
+  static SendInBackground get instance =>
+      _instance; //establishes connection to the database
   Future<Database> _openDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, 'geolocation.db');

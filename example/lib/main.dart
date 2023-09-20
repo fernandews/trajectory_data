@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:trajectory_data/trajectory_data.dart';
 
+import 'package:geolocator/geolocator.dart';
+
 void main() {
   runApp(const MyApp());
   startServices(1111);
-
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Easy Geofencing',
       theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MyHomePage(title: 'App de teste da Jana'),
+      home: MyHomePage(title: 'App de teste da Jana'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
 
   final String title;
 
@@ -36,6 +34,55 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Geofencing geofencing = Geofencing();
+  @override
+  void initState() {
+    super.initState();
+    geofencing.startGeofencing('37.4219983', '-122.084');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title!)
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const SizedBox(
+              height: 100,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: const Text("Start Geofencing"),
+                  onPressed: () {
+                    geofencing.startGeofencing('37.4219983', '-122.084');
+                  },
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                TextButton(
+                  child: const Text("Stop Geofencing"),
+                  onPressed: () {
+                    geofencing.stopGeofencing();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MyHomePageState2 extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {

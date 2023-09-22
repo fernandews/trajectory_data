@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trajectory_data/trajectory_data.dart';
 
-import 'package:geolocator/geolocator.dart';
-
 void main() {
   runApp(const MyApp());
-  startServices(1111);
+
 }
 
 class MyApp extends StatelessWidget {
@@ -38,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    geofencing.startGeofencing('37.4219983', '-122.084');
+    geofencing.startGeofencing('-22.8979788','-43.1879009');
   }
 
   @override

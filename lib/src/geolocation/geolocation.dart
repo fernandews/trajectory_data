@@ -51,7 +51,7 @@ class Geolocation {
       await insertDataInBackground(newGeolocation);
       Geolocation.trajectory.clear();
     }
-    print(Geolocation.trajectory.toString());
+    // print(Geolocation.trajectory.toString());
   }
 
   //check permission e capture the current position

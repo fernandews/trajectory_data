@@ -8,6 +8,7 @@ class Geofencing {
   StreamSubscription<GeofenceStatus>? geofenceStatusStream;
   String geofenceStatus = '';
 
+
   void startGeofencing(String latitude, String longitude) {
     EasyGeofencing.startGeofenceService(
         pointedLatitude: latitude,
@@ -17,15 +18,11 @@ class Geofencing {
 
     geofenceStatusStream ??= EasyGeofencing.getGeofenceStream()!
         .listen((GeofenceStatus status) {
-        geofenceStatus = status.toString();
-        if (status.toString() == GeofenceStatus.enter.toString()) {
-          print('está dentro');
-        }
-        if (status.toString() == GeofenceStatus.exit.toString()) {
-          print('saiu');
-        }
-        if (status.toString() == GeofenceStatus.init.toString()) {
-          print('começou');
+        if (geofenceStatus != status.toString()) {
+          geofenceStatus = status.toString();
+          if (status.toString() == GeofenceStatus.enter.toString()) {
+            startServices(2);
+          }
         }
     });
   }

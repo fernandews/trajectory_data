@@ -118,6 +118,7 @@ class TrajectoryDefinitions {
 }
 
 void startServices(int user) async {
+  print('chamani');
   TrajectoryDefinitions trajectory = TrajectoryDefinitions._instance;
   SendInBackground send = SendInBackground.instance;
   await trajectory._requestPermissionForAndroid();

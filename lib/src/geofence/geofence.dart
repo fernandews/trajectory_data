@@ -13,8 +13,8 @@ class Geofencing {
     EasyGeofencing.startGeofenceService(
         pointedLatitude: latitude,
         pointedLongitude: longitude,
-        radiusMeter: "250.0",
-        eventPeriodInSeconds: 30);
+        radiusMeter: "500.0",
+        eventPeriodInSeconds: 1600);
 
     geofenceStatusStream ??= EasyGeofencing.getGeofenceStream()!
         .listen((GeofenceStatus status) {

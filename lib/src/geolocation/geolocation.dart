@@ -2,6 +2,9 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:async';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:trajectory_data/src/user/user.dart';
 import 'package:trajectory_data/src/internal_persistence/internal_persistence.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
@@ -10,7 +13,7 @@ import 'package:trajectory_data/src/foreground_service/foreground_service.dart';
 
 class Geolocation {
   final int id;
-  final int? user;
+  final String user;
   final String datetime;
   static List<List<double>> trajectory = [];
 
@@ -37,21 +40,39 @@ class Geolocation {
     };
   }
 
+    static Future<Database> _openDatabase() async {
+    final databasePath = await getDatabasesPath();
+    final path = join(databasePath, 'database_user.db');
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE users(id INTEGER PRIMARY KEY)',
+        );
+      },
+    );
+  }
+
+
   // request de current position, insert in a list e check the time to send the list
-  static Future<void> getGeolocation(int? user) async {
+  static Future<void> getGeolocation() async {
     Position position = await determinePosition();
     List<double> geolocation = [position.latitude, position.longitude];
     Geolocation.trajectory.add(geolocation);
     if (Geolocation.trajectory.length == 30) {
+      final Database db = await Geolocation._openDatabase();
+      final Map<String, dynamic>? data = await User.getUserId(db);
+      final String userId = data?['id'];
       final Geolocation newGeolocation = Geolocation(
         id: 0,
-        user: user,
+        user: userId,
         datetime: DateTime.now().toString(),
       );
       await insertDataInBackground(newGeolocation);
       Geolocation.trajectory.clear();
     }
-    // print(Geolocation.trajectory.toString());
+    print(Geolocation.trajectory.toString());
   }
 
   //check permission e capture the current position

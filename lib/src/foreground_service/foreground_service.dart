@@ -11,7 +11,6 @@ void startCallback() {
   FlutterForegroundTask.setTaskHandler(MyTaskHandler());
 }
 
-
 class MyTaskHandler extends TaskHandler {
 
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
@@ -25,8 +24,7 @@ class MyTaskHandler extends TaskHandler {
   @override
   void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
 
-    final userId = await FlutterForegroundTask.getData<int>(key: 'userId');
-    Geolocation.getGeolocation(userId);
+    Geolocation.getGeolocation();
 
   }
 
@@ -98,9 +96,7 @@ class TrajectoryDefinitions {
     );
   }
 
-  Future<bool> _startForegroundTask(int user) async {
-    await FlutterForegroundTask.saveData(key: 'UserId', value: user);
-
+  Future<bool> _startForegroundTask() async {
     if (await FlutterForegroundTask.isRunningService) {
       return FlutterForegroundTask.restartService();
     } else {
@@ -117,12 +113,11 @@ class TrajectoryDefinitions {
   }
 }
 
-void startServices(int user) async {
+void startServices() async {
   TrajectoryDefinitions trajectory = TrajectoryDefinitions._instance;
-  SendInBackground send = SendInBackground.instance;
   await trajectory._requestPermissionForAndroid();
   trajectory._initForegroundTask();
-  trajectory._startForegroundTask(user);
-  send.startApiService();
+  trajectory._startForegroundTask();
+  startApiService();
 }
 

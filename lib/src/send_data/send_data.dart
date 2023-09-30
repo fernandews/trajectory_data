@@ -85,33 +85,32 @@ class SendInBackground {
       }
     }
   }
-
+}
   void callbackDispatcher() {
     Workmanager().executeTask((task, inputData) async {
-      print('opa, comecei!!');
-      final Database db = await _openDatabase();
-      print('abri conexão com o banco');
-      final Map<String, dynamic>? data = await getGeolocationData(db);
-      print('peguei o dado no banco');
-      final int? statusCode = await sendToApi(data);
-      print('chamei a API');
+
+      SendInBackground send = SendInBackground._instance;
+      final Database db = await send._openDatabase();
+      final Map<String, dynamic>? data = await send.getGeolocationData(db);
+      final int? statusCode = await send.sendToApi(data);
+
       if (statusCode == 200) {
-        await deleteGeolocation(data);
+        await send.deleteGeolocation(data);
       }
       return Future.value(true);
     });
   }
 
-  void startApiService() {
-    Workmanager().initialize(callbackDispatcher);
-    Workmanager().registerPeriodicTask(
-      "send_to_api_task",
-      "simplePeriodicTask",
-      inputData: <String, dynamic>{},
-      frequency: Duration(minutes: 15),
-    );
-  }
 
+
+void startApiService() {
+  Workmanager().initialize(callbackDispatcher);
+  Workmanager().registerPeriodicTask(
+    "send_to_api_task",
+    "simplePeriodicTask",
+    inputData: <String, dynamic>{},
+    frequency: Duration(minutes: 15),
+  );
 }
 
 

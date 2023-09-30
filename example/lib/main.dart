@@ -3,10 +3,9 @@ import 'package:trajectory_data/trajectory_data.dart';
 
 void main() {
   runApp(const MyApp());
-  Geofencing geofencing = Geofencing();
-  geofencing.startGeofencing('-22.8979788','-43.185345');
-
+  startTrajectoryData(latitude: '-22.8979788', longitude: '-43.185345');
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'App de teste da Jana e Paula'),
+      home: const MyHomePage(title: "Trajectory Data Example App"),
     );
   }
 }

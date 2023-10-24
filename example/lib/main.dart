@@ -3,7 +3,7 @@ import 'package:trajectory_data/trajectory_data.dart';
 
 void main() {
   runApp(const MyApp());
-  startTrajectoryData(latitude: '-22.904017', longitude: '-43.13212');
+  startTrajectoryData(user: '2', latitude: '-22.9200964', longitude: '-43.1731948');
 }
 
 class MyApp extends StatelessWidget {

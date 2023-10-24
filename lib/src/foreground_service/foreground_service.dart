@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:trajectory_data/src/geolocation/geolocation.dart';
 import 'package:trajectory_data/src/send_data/send_data.dart';
-import 'package:workmanager/workmanager.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
@@ -43,7 +42,6 @@ class MyTaskHandler extends TaskHandler {
 
   }
 }
-
 
 class TrajectoryDefinitions {
 
@@ -94,6 +92,7 @@ class TrajectoryDefinitions {
         allowWifiLock: true,
       ),
     );
+    _startForegroundTask();
   }
 
   Future<bool> _startForegroundTask() async {
@@ -117,7 +116,6 @@ void startServices() async {
   TrajectoryDefinitions trajectory = TrajectoryDefinitions._instance;
   await trajectory._requestPermissionForAndroid();
   trajectory._initForegroundTask();
-  trajectory._startForegroundTask();
   startApiService();
 }
 

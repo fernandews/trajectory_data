@@ -31,9 +31,7 @@ Future<void> _insertData(Geolocation geolocation) async {
 
 //Faz a inserção dos dados no SQLite
 Future<void> insertDataInBackground(Geolocation newGeolocation) {
-
   return _insertData(newGeolocation);
-
 }
 
 

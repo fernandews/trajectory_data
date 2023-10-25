@@ -50,8 +50,17 @@ class User {
     final List<Map<String, dynamic>> maps = await db.query(
         'users');
     if (maps.isNotEmpty) {
+      final dynamic idValue = maps[0]['id'];
+      String id;
+
+      if (idValue is String) {
+        id = idValue;
+
+      }  else {
+        id = idValue.toString();
+      }
       return {
-        'id': maps[0]['id'],
+        'id': id,
       };
     } else {
       return null;
@@ -99,8 +108,6 @@ void callbackDispatcher() {
     return Future.value(true);
   });
 }
-
-
 
 void startUserService(user) {
   Workmanager().initialize(callbackDispatcher);

@@ -88,12 +88,10 @@ class SendInBackground {
 }
   void callbackDispatcher() {
     Workmanager().executeTask((task, inputData) async {
-
-      SendInBackground send = SendInBackground._instance;
+      SendInBackground send = await SendInBackground._instance;
       final Database db = await send._openDatabase();
       final Map<String, dynamic>? data = await send.getGeolocationData(db);
       final int? statusCode = await send.sendToApi(data);
-
       if (statusCode == 200) {
         await send.deleteGeolocation(data);
       }

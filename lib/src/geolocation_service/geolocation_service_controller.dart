@@ -1,63 +1,37 @@
-import 'package:geolocator/geolocator.dart';
-import 'dart:convert';
-import 'dart:async';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:trajectory_data/src/user/user.dart';
-import 'package:trajectory_data/src/internal_persistence/internal_persistence.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
+import 'package:trajectory_data/src/geolocation_service/foreground_task_handler.dart';
+import 'package:trajectory_data/src/geolocation_service/geolocation_service_model.dart';
 
-class Geolocation {
-  final int id;
-  final String user;
-  final String datetime;
-  static List<List<double>> trajectory = [];
+class GeolocationServiceController {
+  GeolocationServiceModel geolocator = GeolocationServiceModel();
 
-  const Geolocation({
-    required this.id,
-    required this.user,
-    required this.datetime,
-  });
+  Future<void> _requestPermissionForAndroid() async {
+    if (!Platform.isAndroid) {
+      return;
+    }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'user': user,
-      'datetime': datetime,
-      'trajectory': jsonEncode(Geolocation.trajectory),
-    };
+    if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
+      await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+    }
+
+    final NotificationPermission notificationPermissionStatus =
+    await FlutterForegroundTask.checkNotificationPermission();
+    if (notificationPermissionStatus != NotificationPermission.granted) {
+      await FlutterForegroundTask.requestNotificationPermission();
+    }
   }
 
-  Map<String, dynamic> fromMap() {
-    return {
-      'id': id,
-      'user': user,
-      'datetime': datetime,
-      'trajectory': jsonEncode(Geolocation.trajectory),
-    };
-  }
+  Future<void> getTrajectoryData() async {
+    List<double> currentLocation = await GeolocationServiceModel.determinePosition()
 
-  static Future<Database> _openDatabase() async {
-    final databasePath = await getDatabasesPath();
-    final path = join(databasePath, 'database_user.db');
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE users(id INTEGER PRIMARY KEY)',
-        );
-      },
-    );
-  }
+    geolocator.addToTrajectory(currentLocation);
 
+    if (trajectory.length == 30) {
+      // colocar no banco
 
-  // request de current position, insert in a list e check the time to send the list
-  static Future<void> getGeolocation() async {
-    Position position = await determinePosition();
-    List<double> geolocation = [position.latitude, position.longitude];
-    Geolocation.trajectory.add(geolocation);
-    if (Geolocation.trajectory.length == 30) {
-      final Database db = await Geolocation._openDatabase();
       final Map<String, dynamic>? data = await User.getUserId(db);
       final String userId = data?['id'];
       final Geolocation newGeolocation = Geolocation(
@@ -66,31 +40,8 @@ class Geolocation {
         datetime: DateTime.now().toString(),
       );
       await insertDataInBackground(newGeolocation);
-      Geolocation.trajectory.clear();
+      trajectory.clear();
     }
     print(Geolocation.trajectory.toString());
   }
-
-  //check permission e capture the current position
-  static Future<Position> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location Permissions are denied');
-      }
-    }
-    return Geolocator.getCurrentPosition();
-  }
 }
-
-
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 //import 'package:flutter/material.dart';
-import 'package:trajectory_data/src/geolocation/geolocation.dart';
+import 'package:trajectory_data/src/geolocationv0/geolocation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

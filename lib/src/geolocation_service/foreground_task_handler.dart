@@ -2,8 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:trajectory_data/src/geolocationv0/geolocation.dart';
-import 'package:trajectory_data/src/send_data/send_data.dart';
+import 'package:trajectory_data/src/geolocation_service/geolocation_service_controller.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
@@ -11,13 +10,14 @@ void startCallback() {
 }
 
 class GeolocationServiceTaskHandler extends TaskHandler {
+  final geolocationServiceController = GeolocationServiceController();
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
   }
 
   @override
   void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
-    Geolocation.getGeolocation();
+    geolocationServiceController.getTrajectoryData();
   }
 
   @override
@@ -73,7 +73,7 @@ class GeolocationServiceTask {
         playSound: false,
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 60000,
+        interval: 6000,
         isOnceEvent: false,
         autoRunOnBoot: true,
         allowWakeLock: true,

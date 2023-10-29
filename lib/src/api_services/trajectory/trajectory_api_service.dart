@@ -5,11 +5,11 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trajectory_data/src/api_services/api_service_model.dart';
 import 'package:trajectory_data/src/api_services/trajectory/trajectory_data_mappers.dart';
-import 'package:trajectory_data/src/user/user_model.dart';
+import 'package:trajectory_data/src/user/user_controller.dart';
 
 class TrajectoryApiServiceController {
   final apiService = ApiServiceModel();
-  final user = User.getUser();
+
   String _feedbackMessage = 'Parece que ainda não tentamos enviar nada.';
 
   TrajectoryApiServiceController._();
@@ -27,6 +27,8 @@ class TrajectoryApiServiceController {
 
   Future<void> _insertData(List<List<double>> trajectoryList) async {
     final Database db = await _openTrajectoryDatabase();
+    final user = await UserController.getUserFromDatabaseOrInstance();
+
     TrajectoryData trajectoryDict = TrajectoryData(user.getId(), trajectoryList);
     var rowInserted = await db.insert(
       'geolocations',

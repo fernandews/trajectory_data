@@ -1,16 +1,27 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:trajectory_data/src/api_service/api_service_controller.dart';
+import 'package:trajectory_data/src/api_services/user/user_api_service.dart';
+import 'package:trajectory_data/src/user/user_model.dart';
 
 class UserController {
-  Future<String?> getUserId() async {
-    Database database = await ApiServiceController.openUserDatabase();
-    List<Map<String, dynamic>> users = await database.query('users');
+  static Future<User> getUserFromDatabaseOrInstance() async {
+    User user = User.getUser();
 
-    if (users.isNotEmpty) {
-      final dynamic idValue = users[0]['id'];
-      return idValue.toString();
+    // user nao tinha um id na instancia
+    if (user.getId() == user.getInitialId()) {
+      UserApiServiceController apiService = UserApiServiceController();
+      String? userId = await apiService.getUserId();
+
+      if (userId != null) {
+        // pegou do banco
+        user.setId(userId);
+      } else {
+        // gerar um aleatório
+        user.generateRandomId();
+      }
+
+      apiService.saveUserIdToLocalStorage(user.getId());
     }
-    return null;
+    return user;
   }
+
 
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:trajectory_data/src/api_services/trajectory/trajectory_api_service.dart';
 
 import 'package:trajectory_data/src/geolocation_service/geolocation_service_model.dart';
 
@@ -26,8 +27,9 @@ class GeolocationServiceController {
 
     geolocator.addToTrajectory(currentLocation);
     if (geolocator.getTrajectory().length == 30) {
-      // colocar no banco
-      print('entrando aqui');
+      TrajectoryApiServiceController apiService = TrajectoryApiServiceController.getTrajectoryApiService();
+      await apiService.insertTrajectoryDataInBackground(geolocator.getTrajectory());
+
       geolocator.clearTrajectory();
     }
   }

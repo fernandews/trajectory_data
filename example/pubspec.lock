@@ -387,9 +387,11 @@ packages:
   trajectory_data:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: e5ca389f90d735f4a364d03059c98dfc78c089b2
+      url: "https://github.com/fernandews/trajectory_data.git"
+    source: git
     version: "0.0.1"
   typed_data:
     dependency: transitive

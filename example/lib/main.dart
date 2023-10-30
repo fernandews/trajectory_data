@@ -4,6 +4,7 @@ import 'package:trajectory_data/trajectory_data.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
+
   // startTrajectoryData(user: '2', latitude: '-22.912408', longitude: '-43.080222');
 }
 

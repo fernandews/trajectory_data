@@ -37,6 +37,7 @@ class GeolocationServiceTaskHandler extends TaskHandler {
 
 class GeolocationServiceTask {
   Future<bool> _startForegroundTask() async {
+    print('start capture');
     if (await FlutterForegroundTask.isRunningService) {
       return FlutterForegroundTask.restartService();
     } else {

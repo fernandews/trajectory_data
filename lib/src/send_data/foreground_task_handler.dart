@@ -37,7 +37,7 @@ class ApiServiceTaskHandler extends TaskHandler {
 
 class ApiServiceTask {
   Future<bool> _startForegroundTask() async {
-    print('strat');
+    print('start');
     if (await FlutterForegroundTask.isRunningService) {
       return FlutterForegroundTask.restartService();
     } else {
@@ -74,7 +74,7 @@ class ApiServiceTask {
         playSound: false,
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 6000,
+        interval: 60000,
         isOnceEvent: false,
         autoRunOnBoot: true,
         allowWakeLock: true,

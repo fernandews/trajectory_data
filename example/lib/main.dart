@@ -5,14 +5,14 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 
-  final geolocationService = GeolocationServiceTask();
-  geolocationService.startGeolocationService();
+  //final geolocationService = GeolocationServiceTask();
+  //geolocationService.startGeolocationService();
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final GeofenceController geofence = GeofenceController('-22.9047791','-43.1301133');
+  final GeofenceController geofence = GeofenceController('-22.91235','-43.0806583');
 
   @override
   Widget build(BuildContext context) {

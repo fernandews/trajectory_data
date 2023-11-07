@@ -59,7 +59,6 @@ class SendDataController {
     if (data != null) {
       final jsonData = json.encode(data);
       final apiUrl = 'https://hye0htyjkl.execute-api.sa-east-1.amazonaws.com/versao-1/geolocation';
-
       final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult == ConnectivityResult.none) {
         return null;

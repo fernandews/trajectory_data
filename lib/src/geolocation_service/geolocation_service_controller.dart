@@ -28,7 +28,7 @@ class GeolocationServiceController {
     geolocator.addToTrajectory(currentLocation);
     if (geolocator.getTrajectory().length == 30) {
       TrajectoryApiServiceController apiService = TrajectoryApiServiceController.getTrajectoryApiService();
-      await apiService.insertTrajectoryDataInBackground(geolocator.getTrajectory());
+      await apiService.insertTrajectoryDataInInternalStorage(geolocator.getTrajectory());
 
       geolocator.clearTrajectory();
     }

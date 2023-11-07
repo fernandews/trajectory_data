@@ -32,9 +32,10 @@ dependencies:
     sdk: flutter
 
   trajectory_data:
-    git:
-      url: https://github.com/fernandews/trajectory_data.git
-      ref: master
+    path: ../
+    # git:
+      # url: https://github.com/fernandews/trajectory_data.git
+      # ref: master
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -42,7 +43,6 @@ dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  crypto: ^3.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

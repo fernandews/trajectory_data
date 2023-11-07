@@ -6,6 +6,7 @@ class User {
   static const String _initialId = "initialId";
 
   User._(this._id);
+
   static User? _instance;
 
   static User getUser() {

@@ -66,7 +66,7 @@ packages:
     source: hosted
     version: "2.0.1"
   crypto:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: crypto
       sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
@@ -387,11 +387,9 @@ packages:
   trajectory_data:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: e5ca389f90d735f4a364d03059c98dfc78c089b2
-      url: "https://github.com/fernandews/trajectory_data.git"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1"
   typed_data:
     dependency: transitive

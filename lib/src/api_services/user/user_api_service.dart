@@ -7,7 +7,7 @@ import 'package:trajectory_data/src/user/user_controller.dart';
 
 class UserApiServiceController {
   final apiService = ApiServiceModel();
-  final user = UserController.getUserFromDatabaseOrInstance();
+  //final user = UserController.getUserFromDatabaseOrInstance();
 
   Future<Database> _openUserDatabase() async {
     String path = join(apiService.getDatabasePath(), 'database_user.db');

@@ -22,7 +22,6 @@ class UserController {
     if (userId == null) {
       apiService.saveUserIdToLocalStorage(user.getId());
     }
-
     return user;
   }
 

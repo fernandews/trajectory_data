@@ -1,8 +1,10 @@
+import 'package:easy_geofencing/easy_geofencing.dart';
+import 'package:easy_geofencing/enums/geofence_status.dart';
+
 import 'package:trajectory_data/src/geofence/geofence_model.dart';
 import 'package:trajectory_data/src/geolocation_service/foreground_task_handler.dart';
 
-import 'package:easy_geofencing/easy_geofencing.dart';
-import 'package:easy_geofencing/enums/geofence_status.dart';
+import 'package:trajectory_data/src/send_data/foreground_task_handler.dart';
 
 class GeofenceController {
   GeofenceController(this._latitude, this._longitude) {
@@ -17,6 +19,7 @@ class GeofenceController {
     var geofence = _activeGeofence;
     var statusStream = geofence.getStatusStream();
     var geolocationService = GeolocationServiceTask();
+    var apiService = ApiServiceTask();
 
     geofence.setupGeofencing(_latitude, _longitude);
 
@@ -26,6 +29,7 @@ class GeofenceController {
         geofence.setStatus(status.toString());
         if (status.toString() == GeofenceStatus.enter.toString()) {
           geolocationService.startGeolocationService();
+          apiService.startApiService();
         }
         if (status.toString() == GeofenceStatus.exit.toString()) {
           geolocationService.stopGeolocationService();

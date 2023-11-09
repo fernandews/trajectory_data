@@ -23,7 +23,7 @@ class Geofence {
     EasyGeofencing.startGeofenceService(
         pointedLatitude: latitude,
         pointedLongitude: longitude,
-        radiusMeter: "1000.0",
+        radiusMeter: "2000.0",
         eventPeriodInSeconds: 60);
   }
 

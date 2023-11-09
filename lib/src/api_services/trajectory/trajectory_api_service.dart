@@ -20,8 +20,8 @@ class TrajectoryApiServiceController {
     return _instance!;
   }
 
-  Future<void> insertTrajectoryDataInBackground(List<List<double>> trajectoryList) {
-    print('tentando inserir dados em plano de fundo');
+  Future<void> insertTrajectoryDataInInternalStorage(List<List<double>> trajectoryList) {
+    print('tentando inserir dados no internal storage');
     return _insertData(trajectoryList);
   }
 

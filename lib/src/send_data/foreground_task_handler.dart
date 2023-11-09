@@ -1,23 +1,23 @@
-import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:trajectory_data/src/geolocation_service/geolocation_service_controller.dart';
+import 'package:trajectory_data/src/send_data/send_data_controller.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
-  FlutterForegroundTask.setTaskHandler(GeolocationServiceTaskHandler());
+  FlutterForegroundTask.setTaskHandler(ApiServiceTaskHandler());
 }
 
-class GeolocationServiceTaskHandler extends TaskHandler {
-  final geolocationServiceController = GeolocationServiceController();
+class ApiServiceTaskHandler extends TaskHandler {
+  SendDataController sendDataController = SendDataController();
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
   }
 
   @override
   void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
-    geolocationServiceController.getTrajectoryData();
+    print('ta chamando');
+    sendDataController.sendDataToApi();
   }
 
   @override
@@ -35,28 +35,28 @@ class GeolocationServiceTaskHandler extends TaskHandler {
   }
 }
 
-class GeolocationServiceTask {
+class ApiServiceTask {
   Future<bool> _startForegroundTask() async {
-    print('start capture');
+    print('start');
     if (await FlutterForegroundTask.isRunningService) {
       return FlutterForegroundTask.restartService();
     } else {
       return FlutterForegroundTask.startService(
-        notificationTitle: 'TCC da Paula e Jana',
-        notificationText: 'A expectativa é que a geolocalização seja capturada',
+        notificationTitle: 'Mandando pra API',
+        notificationText: 'A expectativa é que a geolocalização seja enviada',
         callback: startCallback,
       );
     }
   }
 
-  Future<bool> stopGeolocationService() {
+  Future<bool> stopApiService() {
     return FlutterForegroundTask.stopService();
   }
 
-  void startGeolocationService() async {
+  void startApiService() async {
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
-        id: 500,
+        id: 501,
         channelId: 'trajectory_service',
         channelName: 'trajectory_service_channel',
         channelDescription: '',

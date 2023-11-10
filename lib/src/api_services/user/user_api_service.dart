@@ -16,7 +16,7 @@ class UserApiServiceController {
       version: 1,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE users(id TEXT PRIMARY KEY)',
+          'CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, Userid TEXT PRIMARY KEY)',
         );
       },
     );
@@ -37,7 +37,7 @@ class UserApiServiceController {
     Database database = await _openUserDatabase();
     database.insert(
       'users',
-      { 'id': id.toString() },
+      { 'Userid': id.toString() },
     );
   }
 }

@@ -17,7 +17,7 @@ dependencies:
   path: ^1.8.3
   workmanager: ^0.5.1
   foundation: ^0.0.5
-  flutter_isolate: ^2.0.4
+  #flutter_isolate: ^2.0.4
   compute: ^1.0.2
   http: ^1.1.0
   connectivity: ^3.0.6

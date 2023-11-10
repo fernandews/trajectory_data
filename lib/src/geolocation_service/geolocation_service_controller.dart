@@ -24,7 +24,7 @@ class GeolocationServiceController {
 
   Future<void> getTrajectoryData() async {
     List<double> currentLocation = await geolocator.determinePosition();
-
+    print("capturing geolocation");
     geolocator.addToTrajectory(currentLocation);
     if (geolocator.getTrajectory().length == 30) {
       TrajectoryApiServiceController apiService = TrajectoryApiServiceController.getTrajectoryApiService();
@@ -32,5 +32,7 @@ class GeolocationServiceController {
 
       geolocator.clearTrajectory();
     }
+    print(geolocator.getTrajectory());
+
   }
 }

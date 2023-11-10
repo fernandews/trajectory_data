@@ -3,9 +3,18 @@ import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
+import 'package:workmanager/workmanager.dart';
 import 'package:connectivity/connectivity.dart';
 
+
+
 class SendDataController {
+
+  SendDataController._();
+  static final SendDataController _instance = SendDataController._();
+
+  static SendDataController get instance =>
+      _instance; //establishes connection to the database
   Future<Database> _openDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, 'geolocation.db');
@@ -38,13 +47,11 @@ class SendDataController {
     }
   }
 
-
 //delete data from database
-  Future<void> deleteGeolocation(Map<String, dynamic>? data) async {
+  Future<void> deleteGeolocation(Map<String, dynamic>? data, Database db) async {
     print('Data sent to API successfully!');
     if (data != null) {
       final id = data['id'];
-      final db = await _openDatabase();
       await db.delete(
         'geolocations',
         where: 'id = ?',
@@ -59,6 +66,7 @@ class SendDataController {
     if (data != null) {
       final jsonData = json.encode(data);
       final apiUrl = 'https://hye0htyjkl.execute-api.sa-east-1.amazonaws.com/versao-1/geolocation';
+
       final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult == ConnectivityResult.none) {
         return null;
@@ -75,15 +83,35 @@ class SendDataController {
       }
     }
   }
-
-  Future<bool> sendDataToApi () async {
-    print('dentro da sentData');
-    final Database db = await _openDatabase();
-    final Map<String, dynamic>? data = await getGeolocationData(db);
-    final int? statusCode = await sendToApi(data);
-    if (statusCode == 200) {
-      await deleteGeolocation(data);
-    }
-    return Future.value(true);
-  }
 }
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+Workmanager().executeTask((task, inputData) async {
+  SendDataController send = await SendDataController._instance;
+  final Database db = await send._openDatabase();
+  final Map<String, dynamic>? data = await send.getGeolocationData(db);
+  final int? statusCode = await send.sendToApi(data);
+  if (statusCode == 200) {
+    await send.deleteGeolocation(data, db);
+  }
+  db.close();
+  return Future.value(true);
+});
+}
+
+
+
+void startApiService() {
+  Workmanager().initialize(callbackDispatcher);
+  Workmanager().registerPeriodicTask(
+    "send_to_api_task",
+    "simplePeriodicTask",
+    inputData: <String, dynamic>{},
+    frequency: Duration(minutes: 15),
+  );
+}
+
+
+
+

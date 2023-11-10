@@ -27,6 +27,7 @@ class TrajectoryApiServiceController {
 
   Future<void> _insertData(List<List<double>> trajectoryList) async {
     final Database db = await _openTrajectoryDatabase();
+    print(db.toString());
     final user = await UserController.getUserFromDatabaseOrInstance();
 
     TrajectoryData trajectoryDict = TrajectoryData(user.getId(), trajectoryList);
@@ -50,7 +51,7 @@ class TrajectoryApiServiceController {
       version: 1,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE geolocations(id INTEGER PRIMARY KEY AUTOINCREMENT, user INTEGER, datetime TEXT, trajectory TEXT)',
+          'CREATE TABLE geolocations(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, datetime TEXT, trajectory TEXT)',
         );
       },
     );

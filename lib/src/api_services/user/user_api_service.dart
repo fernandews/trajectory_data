@@ -16,7 +16,7 @@ class UserApiServiceController {
       version: 1,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE users(id INTEGER PRIMARY KEY)',
+          'CREATE TABLE users(id TEXT PRIMARY KEY)',
         );
       },
     );

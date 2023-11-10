@@ -74,7 +74,7 @@ class GeolocationServiceTask {
         playSound: false,
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 60000,
+        interval: 30000,
         isOnceEvent: false,
         autoRunOnBoot: true,
         allowWakeLock: true,

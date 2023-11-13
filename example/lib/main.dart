@@ -12,8 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final GeofenceController geofence = GeofenceController('-22.904442', '-43.130969');
-
+  final GeofenceController geofence = GeofenceController('-22.4024409', '-43.134778');
 
   @override
   Widget build(BuildContext context) {

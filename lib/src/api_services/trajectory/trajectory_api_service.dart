@@ -27,19 +27,26 @@ class TrajectoryApiServiceController {
 
   Future<void> _insertData(List<List<double>> trajectoryList) async {
     final Database db = await _openTrajectoryDatabase();
-    print(db.toString());
+    //print(db.toString());
     final user = await UserController.getUserFromDatabaseOrInstance();
-
+    //print(user.toString());
     TrajectoryData trajectoryDict = TrajectoryData(user.getId(), trajectoryList);
-    var rowInserted = await db.insert(
-      'geolocations',
-      trajectoryDict.mapToJson(),
-    );
-    if(rowInserted != -1) {
-      _feedbackMessage = 'Última inserção feita com sucesso.';
-    }
-    else {
-      _feedbackMessage = 'Última inserção falhou.';
+    //print(trajectoryDict.toString());
+    try {
+        var rowInserted = await db.insert(
+          'geolocations',
+          trajectoryDict.mapToJson(),
+        );
+
+        if (rowInserted != -1) {
+          _feedbackMessage = 'Última inserção feita com sucesso.';
+        } else {
+          _feedbackMessage = 'Última inserção falhou.';
+        }
+    } catch (e) {
+        print('Error inserting data: $e');
+    } finally {
+        await db.close(); // Close the database after the operation
     }
   }
 

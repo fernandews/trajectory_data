@@ -35,9 +35,14 @@ class UserApiServiceController {
 
   void saveUserIdToLocalStorage(String id) async {
     Database database = await _openUserDatabase();
+    await database.delete(
+      'users',
+      where: '1 = 1',
+    );
     database.insert(
       'users',
       { 'Userid': id.toString() },
     );
+    database.close;
   }
 }

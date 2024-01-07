@@ -21,7 +21,7 @@ class TrajectoryApiServiceController {
   }
 
   Future<void> insertTrajectoryDataInInternalStorage(List<List<double>> trajectoryList) {
-    print('tentando inserir dados no internal storage');
+    //print('tentando inserir dados no internal storage');
     return _insertData(trajectoryList);
   }
 

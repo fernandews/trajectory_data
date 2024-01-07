@@ -9,7 +9,6 @@ class UserController {
     // user nao tinha um id na instancia
     if (user.getId() == user.getInitialId()) {
 
-
       if (userId != null) {
         // pegou do banco
         user.setId(userId);

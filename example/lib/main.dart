@@ -5,14 +5,17 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 
-  //final geolocationService = GeolocationServiceTask();
-  //geolocationService.startGeolocationService();
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final GeofenceController geofence = GeofenceController('-22.4024409', '-43.134778');
+  final TrajectoryData trajectory = TrajectoryData(
+      latitude: '-22.9045582',
+      longitude: '-43.133525',
+      notificationTitle: 'Trajectory Data Library',
+      notificationText: 'A plugin to capture trajectory data as a foreground service'
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +25,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: MyHomePage(geofence: geofence),
+      //home: MyHomePage(geofence: geofence),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.geofence});
+  const MyHomePage({super.key});
 
-  final GeofenceController geofence;
-  final String title = 'TCC de Jana e Paula';
+  final String title = 'Trajectory Data Example';
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -48,10 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GeofenceStatusWidget(geofenceController: widget.geofence),
-            TrajectoryApiStatusWidget()
-          ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

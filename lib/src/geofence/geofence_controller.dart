@@ -4,7 +4,6 @@ import 'package:easy_geofencing/enums/geofence_status.dart';
 import 'package:trajectory_data/src/geofence/geofence_model.dart';
 import 'package:trajectory_data/src/geolocation_service/foreground_task_handler.dart';
 import 'package:trajectory_data/src/send_data/send_data_controller.dart';
-//import 'package:trajectory_data/src/send_data/foreground_task_handler.dart';
 
 class GeofenceController {
   GeofenceController(this._latitude, this._longitude) {
@@ -20,7 +19,6 @@ class GeofenceController {
     var geofence = _activeGeofence;
     var statusStream = geofence.getStatusStream();
     var geolocationService = GeolocationServiceTask();
-    //var apiService = ApiServiceTask();
 
     geofence.setupGeofencing(_latitude, _longitude);
 
@@ -39,12 +37,6 @@ class GeofenceController {
     });
   }
 
-  String getStatusToShow() {
-    if (_activeGeofence.getStatus() == GeofenceStatus.enter.toString()) {
-      return "O usuário está na cerca";
-    }
-    return "O usuário está fora da cerca";
-  }
 
   void stopGeofencing () {
     _activeGeofence.killStreamAndService();
